@@ -1,103 +1,140 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect, useMemo } from 'react';
+import BlogCard from './components/BlogCard';
+import SearchBar from './components/SearchBar';
+import { getDummyPosts, getAllPosts } from './lib/post'; // Fix: change from 'posts' to 'post'
+import { Post } from './lib/types';
+import { Sparkles, TrendingUp, Users, Award } from 'lucide-react';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    // Try to get posts from markdown files, fallback to dummy data
+    const allPosts = getAllPosts();
+    setPosts(allPosts.length > 0 ? allPosts : getDummyPosts());
+  }, []);
+
+  // Extract unique tags
+  const availableTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    posts.forEach(post => post.tags.forEach(tag => tagSet.add(tag)));
+    return Array.from(tagSet);
+  }, [posts]);
+
+  // Filter posts based on search and tags
+  const filteredPosts = useMemo(() => {
+    return posts.filter(post => {
+      const matchesSearch = searchQuery === '' || 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesTags = selectedTags.length === 0 ||
+        selectedTags.every(tag => post.tags.includes(tag));
+      
+      return matchesSearch && matchesTags;
+    });
+  }, [posts, searchQuery, selectedTags]);
+
+  const stats = [
+    { icon: TrendingUp, label: 'Active Projects', value: '50+' },
+    { icon: Users, label: 'Contributors', value: '200+' },
+    { icon: Award, label: 'Success Stories', value: '100+' },
+  ];
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+          <div className="text-center">
+            <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full mb-6 animate-fade-in">
+              <Sparkles className="w-5 h-5 text-primary mr-2" />
+              <span className="text-sm font-semibold text-primary">Welcome to GeeksHub</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
+              <span className="gradient-text">Discover Amazing</span>
+              <br />
+              <span className="text-foreground">Blogs & Projects</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto mb-8 animate-fade-in">
+              Explore a curated collection of technical blogs and innovative projects from the GeekforGeeks community.
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mt-12">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="bg-card-bg border border-border rounded-lg p-6 animate-fade-in hover:scale-105 transition-transform"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <Icon className="w-8 h-8 text-primary mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-sm text-foreground/70">{stat.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Main Content */}
+      <section id="blogs" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <span className="gradient-text">Latest Blogs & Projects</span>
+          </h2>
+          <p className="text-foreground/70 max-w-2xl mx-auto">
+            Browse through our collection of insightful articles and innovative projects
+          </p>
+        </div>
+
+        {/* Search and Filter */}
+        <SearchBar
+          onSearch={setSearchQuery}
+          onTagFilter={setSelectedTags}
+          availableTags={availableTags}
+        />
+
+        {/* Results Count */}
+        {(searchQuery || selectedTags.length > 0) && (
+          <div className="text-center mb-6">
+            <p className="text-sm text-foreground/70">
+              Found <span className="font-semibold text-primary">{filteredPosts.length}</span> results
+            </p>
+          </div>
+        )}
+
+        {/* Blog Grid */}
+        {filteredPosts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPosts.map((post, index) => (
+              <BlogCard key={post.slug} post={post} index={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-full mb-4">
+              <Sparkles className="w-10 h-10 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">No posts found</h3>
+            <p className="text-foreground/70">
+              Try adjusting your search or filter criteria
+            </p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
