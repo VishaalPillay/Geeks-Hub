@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,12 +19,6 @@ export const metadata: Metadata = {
   title: "GeeksHub - Blog & Project Showcase",
   description: "A modern blog and project showcase platform built with Next.js and Tailwind CSS",
   keywords: "blog, projects, web development, programming, GeeksforGeeks",
-  authors: [{ name: "GeeksHub Team" }],
-  openGraph: {
-    title: "GeeksHub - Blog & Project Showcase",
-    description: "Explore amazing blogs and projects",
-    type: "website",
-  },
 };
 
 export default function RootLayout({
@@ -33,14 +28,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
-      >
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

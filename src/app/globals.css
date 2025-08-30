@@ -1,43 +1,28 @@
 @import "tailwindcss";
 
+/* GeekforGeeks Inspired Color Palette */
 :root {
-  --primary: #2f8d46;
-  --primary-dark: #0f5132;
-  --secondary: #48c774;
-  --background: #ffffff;
-  --foreground: #171717;
-  --card-bg: #f8f9fa;
-  --border: #e0e0e0;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --primary: #2f8d46;       /* GFG Green */
+  --primary-dark: #0f5132;    /* Darker GFG Green */
+  --secondary: #34a853;     /* Brighter Green Accent */
+  --background: #ffffff;     /* White Background */
+  --foreground: #333333;     /* Dark Gray Text */
+  --card-bg: #f8f9fa;       /* Off-White Card Background */
+  --border: #e0e0e0;         /* Light Gray Border */
 }
 
 .dark {
-  --primary: #48c774;
-  --primary-dark: #2f8d46;
-  --secondary: #52d979;
-  --background: #0f1419;
-  --foreground: #e1e8ed;
-  --card-bg: #1a1f2e;
-  --border: #2f3336;
-  --shadow: rgba(0, 0, 0, 0.3);
+  --primary: #34a853;       /* Brighter GFG Green */
+  --primary-dark: #2f8d46;    /* GFG Green */
+  --secondary: #48c774;     /* Lighter Green Accent */
+  --background: #121212;     /* Near Black Background */
+  --foreground: #e0e0e0;     /* Light Gray Text */
+  --card-bg: #1e1e1e;       /* Dark Gray Card Background */
+  --border: #333333;         /* Darker Gray Border */
 }
 
-@theme inline {
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-secondary: var(--secondary);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card-bg: var(--card-bg);
-  --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@theme {
+  /* For Tailwind v4 if needed */
 }
 
 html {
@@ -45,197 +30,15 @@ html {
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--card-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
-}
-
-/* Animation utilities */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-in {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out;
-}
-
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glass {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Markdown content styling */
-.prose {
-  max-width: none;
-}
-
-.prose h1, .prose h2, .prose h3 {
-  color: var(--primary);
-  font-weight: 700;
-  line-height: 1.3;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.prose h1 {
-  font-size: 2.5rem;
-}
-
-.prose h2 {
-  font-size: 2rem;
-}
-
-.prose h3 {
-  font-size: 1.5rem;
-}
-
-.prose p {
-  margin-bottom: 1.5rem;
-  line-height: 1.8;
-}
-
-.prose code {
-  background: var(--card-bg);
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.9rem;
-  color: var(--primary);
-}
-
-.prose pre {
-  background: var(--card-bg);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
-.prose pre code {
-  background: none;
-  padding: 0;
-  color: var(--foreground);
-}
-
-.prose a {
-  color: var(--primary);
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-
-.prose a:hover {
-  color: var(--secondary);
-}
-
-.prose ul, .prose ol {
-  margin-left: 2rem;
-  margin-bottom: 1.5rem;
-}
-
-.prose li {
-  margin-bottom: 0.5rem;
-}
-
-.prose blockquote {
-  border-left: 4px solid var(--primary);
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  font-style: italic;
-  color: var(--foreground);
-  opacity: 0.9;
-}
-
-/* Line clamp utilities */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Grid pattern background */
-.bg-grid-pattern {
-  background-image: 
-    linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-/* Prose container */
-.prose-container {
-  max-width: none;
 }
