@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // Enable class-based dark mode
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,29 +8,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: 'var(--color-primary)',
-        'primary-dark': 'var(--color-primary-dark)',
-        secondary: 'var(--color-secondary)',
-        background: 'var(--color-background)',
-        foreground: 'var(--color-foreground)',
-        'card-bg': 'var(--color-card-bg)',
-        border: 'var(--color-border)',
-      },
+      colors: { /* ... your colors ... */ },
       fontFamily: {
-        sans: 'var(--font-sans)',
-        mono: 'var(--font-mono)',
+        sans: 'var(--font-geist-sans)',
+        mono: 'var(--font-geist-mono)',
+        slab: 'var(--font-roboto-slab)',
+        serif: 'var(--font-playfair)', // Add this line
       },
-      keyframes: {
-        'fade-in-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-      },
-      animation: {
-        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-      },
+      keyframes: { /* ... your keyframes ... */ },
+      animation: { /* ... your animations ... */ },
     },
   },
   plugins: [],
-}
+};
